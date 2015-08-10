@@ -15,6 +15,7 @@ module Spree
       attribute :taxons, Array
       attribute :browse_mode, Boolean, default: true
       attribute :properties, Hash
+      attribute :tags, Array
       attribute :per_page, String
       attribute :page, String
       attribute :sorting, String
@@ -35,6 +36,7 @@ module Spree
             discount_min: discount_min,
             discount_max: discount_max,
             properties: properties || {},
+            tags: tags || [],
             sorting: sorting
           ).to_hash
         )
@@ -88,6 +90,8 @@ module Spree
           end
           # properties
           @properties = params[:search][:properties]
+
+          @tags = params[:search][:tags]
         end
 
         @per_page = (params[:per_page].to_i <= 0) ? Spree::Config[:products_per_page] : params[:per_page].to_i

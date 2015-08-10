@@ -18,6 +18,7 @@ module Spree
       indexes :sku, type: 'string', index: 'not_analyzed'
       indexes :taxon_ids, type: 'string', index: 'not_analyzed'
       indexes :image_url, type: 'string', index: 'not_analyzed', include_in_all: false
+      indexes :tags, type: 'string', index: 'not_analyzed'
 
       # TODO: make properties top level?
       indexes :properties, type: 'object', index: 'not_analyzed' do
@@ -36,7 +37,7 @@ module Spree
     def as_indexed_json(options={})
       result = as_json({
         methods: [:price, :sku, :discount_rate],
-        only: [:available_on, :description, :name, :out_of_date_at, :created_at, :deleted_at, :popularity_score, :trending_score],
+        only: [:available_on, :description, :name, :tags, :out_of_date_at, :created_at, :deleted_at, :popularity_score, :trending_score],
         include: {
           variants: {
             only: [:sku],
@@ -63,6 +64,7 @@ module Spree
       attribute :discount_min, Integer
       attribute :discount_max, Integer
       attribute :properties, Hash, default: {}
+      attribute :tags, Array, default: []
       attribute :query, String
       attribute :taxons, Array
       attribute :browse_mode, Boolean
@@ -147,6 +149,9 @@ module Spree
         result[:query][:filtered][:query] = query
         # taxon and property filters have an effect on the facets
         and_filter << { terms: { taxon_ids: taxons } } unless taxons.empty?
+
+        # tag search
+        and_filter << { terms: { tags: @tags } } unless @tags.empty?
 
         # filter by price
         price = {}
