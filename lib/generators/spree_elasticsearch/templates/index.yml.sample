@@ -10,7 +10,6 @@ settings:
           - standard
           - lowercase
           - asciifolding
-          - stop
           - synonym
           - kstem
         tokenizer: standard
