@@ -61,7 +61,7 @@ module Spree
           #    the first 2 =>
           #      go into the regex engine which reads it as a single literal backslash
           #    the last one combined with the "1" to insert the first match group
-          special_chars_escaped = s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
+          special_chars_escaped = s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1').gsub('&', ' ')
 
           # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
           # Lucene trying to parse it as a query conjunction
